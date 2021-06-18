@@ -26,6 +26,7 @@ const convertSVG = (svgid) => {
         context.save();
         context.beginPath();
         context.arc(150, 150, 32, 0, Math.PI * 2, false);
+
         context.clip();
         context.drawImage(img, 150-34, 150-34, 68, 68);
         context.restore();
