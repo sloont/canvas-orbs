@@ -1,7 +1,7 @@
 import './styles/index.css';
 
-let canvas = document.getElementById("canvas");
-let context = canvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
 
 var window_height = window.innerHeight;
 var window_width = window.innerWidth;
@@ -9,7 +9,7 @@ var window_width = window.innerWidth;
 canvas.width = 500;
 canvas.height = 400;
 
-canvas.style.background = "#333"
+canvas.style.background = "#232a2e"
 
 const convertSVG = (svgid) => {
     const svg = document.getElementById(svgid);
@@ -28,32 +28,47 @@ class Orb {
         this.ypos = ypos;
         this.radius = radius;
         this.speed = speed;
-        this.image = convertSVG(image);
+        this.imageSRC = convertSVG(image);
+        this.image = new Image();
+        
+    }
+
+
+    draw(ctx) {
+        let image = this.image;
+        image.onload = function() {
+            // context.save();
+            ctx.beginPath();
+            ctx.arc(this.xpos, this.ypos, this.radius, 0, Math.PI * 2, false);
+            ctx.clip();
+            ctx.drawImage(image, (this.xpos - this.radius), (this.ypos - this.radius), 64, 64);
+            // context.restore();
+            // context.closePath();
+        }
+        image.src = this.imageSRC;
+
+    }
+    update() {
+        this.draw(context);
     }
 }
+const myOrb = new Orb(300, 300, 30, 1, 'javascript-icon');
+const myOrb2 = new Orb(150, 150, 30, 1, 'java-icon');
 
-const draw = () => {        //for now this is outside of a class
+const img  = new Image();
 
-    const img  = new Image();
-
-    img.onload = function() {
-        context.save();
-        context.beginPath();
-        context.arc(150, 150, 32, 0, Math.PI * 2, false);
-    
-        context.clip();
-        context.drawImage(img, 150-34, 150-34, 68, 68);
-        context.restore();
-    }
-    img.src = convertSVG('javascript-icon');
-
+img.onload = function() {
+    context.save();
+    context.beginPath();
+    context.arc(myOrb.xpos, myOrb.ypos, myOrb.radius, 0, Math.PI * 2, false);
+    context.clip();
+    context.drawImage(img, (myOrb.xpos-myOrb.radius-2), (myOrb.ypos-myOrb.radius-2), 64, 64);
+    context.restore();
 }
-
-const update = () => {
-
-    draw();
+img.src = myOrb.imageSRC;
 
 
+console.log(myOrb);
+console.log(myOrb2);
 
-}
-
+myOrb2.draw(context);
