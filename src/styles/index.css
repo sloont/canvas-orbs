@@ -1,4 +1,16 @@
 body {
     margin: 0;
+    background: #121212;
     
+}
+
+canvas {
+    margin: 3rem;
+}
+
+#svgs svg {
+    height: 64px;
+    width: 64px;
+    display: none; 
+    /* this doesn't hide the balls */
 }
