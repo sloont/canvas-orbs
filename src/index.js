@@ -88,9 +88,13 @@ class Orb {
 }
 const orbCollection = [];
 
+const randomNumber = (min, max) => {
+    return Math.random() * (max - min) + min;
+}
+
 for (let i = 0; i < svgIdArray.length; i++) {
-    let randomx = Math.random() * 500;
-    let randomy = Math.random() * 400;
+    let randomx = randomNumber(32, (canvas.width - 32));
+    let randomy = randomNumber(32, (canvas.height - 32));
     orbCollection.push(new Orb(randomx, randomy, 32, 1, imagesObject[svgIdArray[i]]));
     
 }
