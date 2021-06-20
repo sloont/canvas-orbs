@@ -3,6 +3,7 @@ import './styles/index.css';
 import { svgIdArray } from './svgArray';
 import { convertSVG } from './convertSVG';
 import { checkCollision, resolveCollision, adjustPositions } from './physics';
+import { checkMouseCollision, resolveMouseCollision, adjustPositionAfterMouse } from './mousePhysics';
 
 
 const canvas = document.getElementById("canvas");
@@ -32,6 +33,30 @@ for (let svgId of iterateTheObject) {
 };
 
 const gravity = [0, -0.05];
+
+/*///////////////TODO////////////////
+
+//- Add impulse to other balls on mouse click-
+//   --we can change their dx and dy based on ~*~triangles
+
+//- Figure out how to incorporate the canvas into react
+
+///////////////////////////////////*/
+
+//Lets make a mouse object and a mousemove event listener to track it
+const mouse = {
+    x: undefined,
+    y: undefined,
+};
+
+canvas.addEventListener("mousemove", (event) => {
+    mouse.x = event.x;
+    mouse.y = event.y;
+})
+
+
+
+
 /////////////////////////////////////////////////////
 
 class Orb {
@@ -127,6 +152,16 @@ const animate = () => {
                 }
             }
         });
+
+        //new stuff for mouse collisions
+        const mouseCollision = checkMouseCollision(ballA, mouse);
+        
+        if (mouseCollision[0] && mouseCollision[1]) {
+            
+            adjustPositionAfterMouse(ballA, mouse, mouseCollision[1]);
+            resolveMouseCollision(ballA, mouse);
+            console.log(mouse, ballA);
+        }
     });
     requestAnimationFrame(animate);
 }
