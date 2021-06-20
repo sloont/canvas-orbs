@@ -104,9 +104,11 @@ const animateFunction = () => {
     });
 }
 
-window.onload = function() {
+//removed this being inside the window.onload callback function
+//should leave a not here just in case
+//this used to be window.onload = () => {animateFunction();}
     animateFunction();
-}
+
 
 //test//////////////////////////
 // console.log(svgIdArray); this works
