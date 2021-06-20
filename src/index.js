@@ -1,8 +1,9 @@
 import './styles/index.css';
-///test
+
 import { svgIdArray } from './svgArray';
 import { convertSVG } from './convertSVG';
-///
+import { checkCollision, resolveCollision, adjustPositions } from './physics';
+
 
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
@@ -88,6 +89,7 @@ class Orb {
 }
 const orbCollection = [];
 
+//for not spawning balls inside the walls
 const randomNumber = (min, max) => {
     return Math.random() * (max - min) + min;
 }
@@ -99,19 +101,46 @@ for (let i = 0; i < svgIdArray.length; i++) {
     
 }
 
-const animateFunction = () => {
-    requestAnimationFrame(animateFunction);
-    //clear whole canvas every frame
+const animate = () => {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    orbCollection.forEach(orb => {
-        orb.update();
+
+    orbCollection.forEach(ballA => {
+        ballA.update();
+
+        orbCollection.forEach(ballB => {
+            if (ballA !== ballB) {
+                const collision = checkCollision(ballA, ballB);
+                if (collision[0]) {
+                    adjustPositions(ballA, ballB, collision[1]);
+                    resolveCollision(ballA, ballB);
+                }
+            }
+        });
     });
+    requestAnimationFrame(animate);
 }
 
-//removed this being inside the window.onload callback function
-//should leave a not here just in case
-//this used to be window.onload = () => {animateFunction();}
-    animateFunction();
+animate();
+
+
+
+
+
+//old animate function
+
+// const animateFunction = () => {
+//     requestAnimationFrame(animateFunction);
+//     //clear whole canvas every frame
+//     context.clearRect(0, 0, canvas.width, canvas.height);
+//     orbCollection.forEach(orb => {
+//         orb.update();
+//     });
+// }
+
+// //removed this being inside the window.onload callback function
+// //should leave a not here just in case
+// //this used to be window.onload = () => {animateFunction();}
+//     animateFunction();
 
 
 //test//////////////////////////
