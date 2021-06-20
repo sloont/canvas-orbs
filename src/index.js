@@ -9,8 +9,8 @@ const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 const backgroundCTX = canvas.getContext("2d");
 
-canvas.width = 500;
-canvas.height = 400;
+canvas.width = 400;
+canvas.height = 800;
 
 canvas.style.background = "#232a2e"
 
@@ -30,6 +30,7 @@ for (let svgId of iterateTheObject) {
     imagesObject[svgId].src = convertedSVGS[svgId];
 };
 
+const gravity = [0, -0.01];
 /////////////////////////////////////////////////////
 
 class Orb {
@@ -64,26 +65,35 @@ class Orb {
         const xBound = canvas.width;
         const yBound = canvas.height;
 
-        this.draw(context, backgroundCTX);
-
-        if ((this.xpos + this.radius) > xBound) {
-            this.dx = -this.dx;
-        }
-
-        if ((this.xpos - this.radius) < 0 ) {
-            this.dx = -this.dx;
-        }
-
-        if ((this.ypos + this.radius) > yBound) {
-            this.dy = -this.dy;
-        }
-
-        if ((this.ypos - this.radius) < 0) {
-            this.dy = -this.dy;
-        }
-
         this.xpos += this.dx;
         this.ypos += this.dy;
+
+        this.dx += gravity[0];
+        this.dy -= gravity[1];
+
+        if (this.xpos > xBound - this.radius) {
+            this.xpos = xBound - this.radius;
+            this.dx *= -1;
+        }
+
+        else if (this.xpos < this.radius) {
+            this.xpos = this.radius;
+            this.dx *= -1;
+        }
+
+        if (this.ypos > yBound - this.radius) {
+            this.ypos = yBound - this.radius;
+            this.dy *= -0.7;
+        }
+
+        else if (this.ypos < this.radius) {
+            this.ypos = this.radius + 1
+            this.dy *= -0.7;
+        }
+
+        
+
+        this.draw(context, backgroundCTX);
     }
             
 }
