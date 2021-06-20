@@ -19,18 +19,19 @@ const imagesObject = {};
 const convertedSVGS = {}
 //the key has to be called with bracket notation here 
 //with dot notation assignment we get one key, svgId
-const emptyImages = svgIdArray.map(svgId => imagesObject[svgId] = new Image()); 
+
+svgIdArray.map(svgId => imagesObject[svgId] = new Image()); 
 
 const iterateTheObject = Object.keys(imagesObject);
 
-const base64ImgArray = iterateTheObject.map(svgId => convertedSVGS[svgId] = convertSVG(svgId));
+iterateTheObject.map(svgId => convertedSVGS[svgId] = convertSVG(svgId));
 
 //this correctly assigns the src
 for (let svgId of iterateTheObject) {
     imagesObject[svgId].src = convertedSVGS[svgId];
 };
 
-const gravity = [0, -0.01];
+const gravity = [0, -0.05];
 /////////////////////////////////////////////////////
 
 class Orb {
