@@ -8,9 +8,6 @@ const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 const backgroundCTX = canvas.getContext("2d");
 
-var window_height = window.innerHeight;
-var window_width = window.innerWidth;
-
 canvas.width = 500;
 canvas.height = 400;
 
@@ -41,6 +38,9 @@ class Orb {
         this.radius = radius;
         this.speed = speed;
         this.image = image;
+        //set deltas
+        this.dx = 1.5 * this.speed;
+        this.dy = 1 * this.speed;
     }
     draw(context, backgroundCTX) {
         backgroundCTX.beginPath();
@@ -58,8 +58,31 @@ class Orb {
         context.drawImage(this.image, (this.xpos - this.radius), (this.ypos - this.radius), 64, 64);
         /*test*/context.stroke();
         context.restore();
+    }
+    update() {
+        const xBound = canvas.width;
+        const yBound = canvas.height;
 
-            
+        this.draw(context, backgroundCTX);
+
+        if ((this.xpos + this.radius) > xBound) {
+            this.dx = -this.dx;
+        }
+
+        if ((this.xpos - this.radius) < 0 ) {
+            this.dx = -this.dx;
+        }
+
+        if ((this.ypos + this.radius) > yBound) {
+            this.dy = -this.dy;
+        }
+
+        if ((this.ypos - this.radius) < 0) {
+            this.dy = -this.dy;
+        }
+
+        this.xpos += this.dx;
+        this.ypos += this.dy;
     }
             
 }
@@ -72,11 +95,17 @@ for (let i = 0; i < svgIdArray.length; i++) {
     
 }
 
+const animateFunction = () => {
+    requestAnimationFrame(animateFunction);
+    //clear whole canvas every frame
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    orbCollection.forEach(orb => {
+        orb.update();
+    });
+}
 
 window.onload = function() {
-    for (let orb of orbCollection) {
-        orb.draw(context, backgroundCTX);
-    }
+    animateFunction();
 }
 
 //test//////////////////////////
