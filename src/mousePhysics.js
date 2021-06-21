@@ -19,6 +19,6 @@ export const applyForceWithClick = (ballA, mouse) => {
 
     ballA.dx -= (1/ballA.radius) * impulse[0];
     ballA.dy -= (1/ballA.radius) * impulse[1];
-    console.log("Magnitude: " + magnitude + " < 32 (radius)")
+    console.log("Magnitude: " + magnitude + " < " + ballA.radius + " (radius)")
     console.log("New Velocity: " + [ballA.dx, ballA.dy])
 }

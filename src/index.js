@@ -1,9 +1,8 @@
 import './styles/index.css';
 
-import { svgIdArray } from './svgArray';
-import { convertSVG } from './convertSVG';
 import { checkCollision, resolveCollision, adjustPositions } from './physics';
 import { checkMouseClick, applyForceWithClick } from './mousePhysics';
+import { orbInformation } from './ballInformation';
 
 
 const canvas = document.getElementById("canvas");
@@ -14,23 +13,6 @@ canvas.width = 1000;
 canvas.height = 800;
 
 canvas.style.background = "#232a2e"
-
-//LETS MAKE THE OBJECT TO HOLD THE IMAGES WITH KEYS
-const imagesObject = {};
-const convertedSVGS = {}
-//the key has to be called with bracket notation here 
-//with dot notation assignment we get one key, svgId
-
-svgIdArray.map(svgId => imagesObject[svgId] = new Image()); 
-
-const iterateTheObject = Object.keys(imagesObject);
-
-iterateTheObject.map(svgId => convertedSVGS[svgId] = convertSVG(svgId));
-
-//this correctly assigns the src
-for (let svgId of iterateTheObject) {
-    imagesObject[svgId].src = convertedSVGS[svgId];
-};
 
 const gravity = [0, -0.05];
 
@@ -84,7 +66,7 @@ class Orb {
         /*test*/context.lineWidth = 5;
         context.arc(this.xpos, this.ypos, this.radius, 0, Math.PI * 2, false);
         context.clip();
-        context.drawImage(this.image, (this.xpos - this.radius), (this.ypos - this.radius), 64, 64);
+        context.drawImage(this.image, (this.xpos - this.radius), (this.ypos - this.radius), this.radius *2, this.radius*2);
         /*test*/context.stroke();
         context.restore();
     }
@@ -131,10 +113,14 @@ const randomNumber = (min, max) => {
     return Math.random() * (max - min) + min;
 }
 
-for (let i = 0; i < svgIdArray.length; i++) {
-    let randomx = randomNumber(32, (canvas.width - 32));
-    let randomy = randomNumber(32, (canvas.height - 32));
-    orbCollection.push(new Orb(randomx, randomy, 32, 1, imagesObject[svgIdArray[i]]));
+const orbIds = Object.keys(orbInformation);
+
+for (let i = 0; i < orbIds.length; i++) {
+    const x = orbInformation[orbIds[i]].skill;
+    let skillSize = Math.sqrt(Math.sqrt(Math.sqrt( x * x * x * x * x * x * x * x))) * 10; //this is x ^ ( 4/3 ) * 10
+    let randomx = randomNumber(skillSize, (canvas.width - skillSize));
+    let randomy = randomNumber(skillSize, (canvas.height - skillSize));
+    orbCollection.push(new Orb(randomx, randomy, skillSize, 1, orbInformation[orbIds[i]].image));
     
 }
 
@@ -158,5 +144,5 @@ const animate = () => {
 }
 
 animate();
-
+console.log(orbInformation);
 ////////////////////////////////
