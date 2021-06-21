@@ -49,6 +49,7 @@ canvas.addEventListener("mousedown", (event) => {
         checkMouseClick(ballA, mouse);
         if (checkMouseClick(ballA, mouse)) {
             applyForceWithClick(ballA, mouse);
+            return;
         }
     })
     
