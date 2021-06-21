@@ -3,14 +3,14 @@ import './styles/index.css';
 import { svgIdArray } from './svgArray';
 import { convertSVG } from './convertSVG';
 import { checkCollision, resolveCollision, adjustPositions } from './physics';
-import { checkMouseCollision, resolveMouseCollision, adjustPositionAfterMouse } from './mousePhysics';
+import { checkMouseClick, applyForceWithClick } from './mousePhysics';
 
 
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 const backgroundCTX = canvas.getContext("2d");
 
-canvas.width = 400;
+canvas.width = 1000;
 canvas.height = 800;
 
 canvas.style.background = "#232a2e"
@@ -34,25 +34,25 @@ for (let svgId of iterateTheObject) {
 
 const gravity = [0, -0.05];
 
-/*///////////////TODO////////////////
-
-//- Add impulse to other balls on mouse click-
-//   --we can change their dx and dy based on ~*~triangles
-
-//- Figure out how to incorporate the canvas into react
-
-///////////////////////////////////*/
 
 //Lets make a mouse object and a mousemove event listener to track it
+
 const mouse = {
     x: undefined,
     y: undefined,
 };
 
-canvas.addEventListener("mousemove", (event) => {
-    mouse.x = event.x;
-    mouse.y = event.y;
-})
+canvas.addEventListener("mousedown", (event) => {
+    mouse.x = event.x - 50;
+    mouse.y = event.y - 50;
+    orbCollection.forEach(ballA => {
+        checkMouseClick(ballA, mouse);
+        if (checkMouseClick(ballA, mouse)) {
+            applyForceWithClick(ballA, mouse);
+        }
+    })
+    
+});
 
 
 
@@ -152,43 +152,10 @@ const animate = () => {
                 }
             }
         });
-
-        //new stuff for mouse collisions
-        const mouseCollision = checkMouseCollision(ballA, mouse);
-        
-        if (mouseCollision[0] && mouseCollision[1]) {
-            
-            adjustPositionAfterMouse(ballA, mouse, mouseCollision[1]);
-            resolveMouseCollision(ballA, mouse);
-            console.log(mouse, ballA);
-        }
     });
     requestAnimationFrame(animate);
 }
 
 animate();
 
-
-
-
-
-//old animate function
-
-// const animateFunction = () => {
-//     requestAnimationFrame(animateFunction);
-//     //clear whole canvas every frame
-//     context.clearRect(0, 0, canvas.width, canvas.height);
-//     orbCollection.forEach(orb => {
-//         orb.update();
-//     });
-// }
-
-// //removed this being inside the window.onload callback function
-// //should leave a not here just in case
-// //this used to be window.onload = () => {animateFunction();}
-//     animateFunction();
-
-
-//test//////////////////////////
-// console.log(svgIdArray); this works
 ////////////////////////////////
